@@ -6,10 +6,20 @@ import { mealsRequest } from '../../services/meals-services';
 
 const AvailableMeals = () => {
   const [availableMeals, setAvailableMeals] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+  const [httpError, setHttpError] = useState(null);
 
   const fetchMeals = async () => {
-    const data = await mealsRequest();
-    setAvailableMeals(data)
+    try {
+      const data = await mealsRequest();
+      setAvailableMeals(data);
+      setIsLoading(false);
+      setHttpError(null)
+    } catch (error) {
+      setIsLoading(false);
+      setAvailableMeals(false);
+      setHttpError(error.message);
+    }
   }
   useEffect(() => {
     fetchMeals();
@@ -17,7 +27,9 @@ const AvailableMeals = () => {
 
   return <section className={classes.meals}>
     <Card>
-      <ul>{availableMeals ? availableMeals.map(meal => <MealItem key={meal.id} id={meal.id} name={meal.name} description={meal.description} price={meal.price} />) : <h2 style={{ textAlign: 'center' }}>Something went wrong!</h2>}</ul>
+      {isLoading && <h2 style={{ textAlign: 'center' }}>Loading...</h2>}
+      {httpError && <h2 style={{ textAlign: 'center' }}>{httpError}</h2>}
+      <ul>{!isLoading && availableMeals && availableMeals.map(meal => <MealItem key={meal.id} id={meal.id} name={meal.name} description={meal.description} price={meal.price} />)}</ul>
     </Card>
   </section>
 }

@@ -1,23 +1,24 @@
 const mealsRequest = async () => {
-    try {
-        const res = await fetch("https://foodorderappapi-default-rtdb.firebaseio.com/meals.json");
-        const data = await res.json();
+    const res = await fetch("https://foodorderappapi-default-rtdb.firebaseio.com/meals.json");
 
-        const meals = [];
-
-        for (const key in data) {
-            meals.push({
-                id: key,
-                name: data[key].name,
-                description: data[key].description,
-                price: data[key].price
-            })
-        }
-
-        return meals;
-    } catch (error) {
-        throw error;
+    if (!res.ok) {
+        throw new Error('Something went wrong!');
     }
+
+    const data = await res.json();
+
+    const meals = [];
+
+    for (const key in data) {
+        meals.push({
+            id: key,
+            name: data[key].name,
+            description: data[key].description,
+            price: data[key].price
+        })
+    }
+
+    return meals;
 };
 
 // const postMeals = async (meal) => {

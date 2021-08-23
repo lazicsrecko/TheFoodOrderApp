@@ -1,6 +1,7 @@
-import classes from './MealsSummary.module.css';
+import classes from './Banner.module.css';
 
-const MealsSummary = () => {
+const Banner = (props) => {
+  const { customerDetails } = props;
   return (
     <section className={classes.summary}>
       <h2>Delicious Food, Delivered To You</h2>
@@ -12,8 +13,9 @@ const MealsSummary = () => {
         All our meals are cooked with high-quality ingredients, just-in-time and
         of course by experienced chefs!
       </p>
+      {!customerDetails && <p>Please enter your details below to proceed to our menu!</p>}
     </section>
   );
 };
 
-export default MealsSummary;
+export default Banner;

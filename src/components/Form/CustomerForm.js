@@ -13,7 +13,6 @@ const CustomerForm = (props) => {
 
     const onSubmit = (event) => {
         event.preventDefault();
-        console.log(customerName.current.value)
         const customer = {
             customerName: customerName.current.value,
             customerAddress: customerAddress.current.value,
