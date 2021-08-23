@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import Header from './components/Layout/Header';
 import Meals from './components/Meals/Meals';
+import CustomerForm from './components/Form/CustomerForm';
 import Cart from './components/Cart/Cart';
 import CartProvider from './store/CartProvider';
 
 function App() {
   const [cartIsShown, setCartIsShown] = useState(false);
+  const [customerDetails, setCustomerDetails] = useState(false);
 
   const showCartHandler = () => {
     setCartIsShown(true);
@@ -15,12 +17,17 @@ function App() {
     setCartIsShown(false);
   }
 
+  const customerDetailsHandler = (customerConfirmed) => {
+    setCustomerDetails(customerConfirmed);
+  }
+
   return (
     <CartProvider>
-      {cartIsShown && <Cart onHideCart={hideCartHandler}/>}
-      <Header onShowCart={showCartHandler} />
+      {cartIsShown && <Cart customerDetailsHandler={customerDetailsHandler} onHideCart={hideCartHandler} />}
+      <Header customerDetails={customerDetails} onShowCart={showCartHandler} />
       <main>
-        <Meals />
+        {!customerDetails && <CustomerForm customerDetailsHandler={customerDetailsHandler} />}
+        {customerDetails && <Meals />}
       </main>
     </CartProvider>
   );

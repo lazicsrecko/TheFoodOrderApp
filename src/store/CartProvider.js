@@ -2,6 +2,9 @@ import React, { useReducer } from 'react';
 import CartContext from './cart-context';
 
 const defaultCartState = {
+    customerName: '',
+    customerAddress: '',
+    customerPhone: null,
     items: [],
     totalAmount: 0,
 }
@@ -25,6 +28,7 @@ const cartReducer = (state, action) => {
             updatedItems = state.items.concat(action.item);
         }
         return {
+            ...state,
             items: updatedItems,
             totalAmount: updatedTotalAmount,
         }
@@ -44,9 +48,22 @@ const cartReducer = (state, action) => {
             updatedItems[existingCartItemIndex] = updatedItem;
         }
         return {
+            ...state,
             items: updatedItems,
             totalAmount: updatedTotalAmount
         }
+    }
+    if (action.type === 'ADD_CUSTOMER') {
+        const { customerName, customerAddress, customerPhone } = action.customer;
+        return {
+            ...state,
+            customerName,
+            customerAddress,
+            customerPhone
+        }
+    }
+    if (action.type === 'RESET') {
+        return defaultCartState;
     }
     return defaultCartState;
 };
@@ -61,12 +78,25 @@ const CartProvider = props => {
         dispatchCartAction({ type: 'DELETE', id: id });
     };
 
+    const addNewCustomerHandler = customer => {
+        dispatchCartAction({ type: 'ADD_CUSTOMER', customer: customer });
+    };
+
+    const resetCartState = () => {
+        dispatchCartAction({ type: 'RESET' });
+    }
+
     const cartContext = {
+        customerName: cartState.customerName,
+        customerAddress: cartState.customerAddress,
+        customerPhone: cartState.customerPhone,
         items: cartState.items,
         totalAmount: cartState.totalAmount,
         itemsInCart: cartState.itemsInCart,
         addItem: addItemToCartHandler,
-        removeItem: removeItemFromCartHandler
+        removeItem: removeItemFromCartHandler,
+        addCustomer: addNewCustomerHandler,
+        resetCart: resetCartState
     }
     return (
         <CartContext.Provider value={cartContext}>
